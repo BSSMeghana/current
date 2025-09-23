@@ -9,10 +9,11 @@ const HeroSection = dynamic(() => import("./HeroSection1"), { ssr: false });
 
 export default function Home() {
   return (
-    <>
+    <div className={styles.container}>
       <Header />
       <HeroContainer />
-      {/* Other sections like Features, Footer, etc. */}
-    </>
+      {/* Other sections */}
+    </div>
   );
 }
+
