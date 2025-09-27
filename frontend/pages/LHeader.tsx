@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../styles/lheader.module.css";
 import {
   FaInstagram,
@@ -9,12 +9,33 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { SiThreads } from "react-icons/si";
+import { useRouter } from "next/router";
 
 interface LHeaderProps {
   setActivePlatform: (platform: string | null) => void;
 }
 
 const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
+  const router = useRouter();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("http://localhost:4000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        router.push("/login");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>☐ LOGO</div>
@@ -26,7 +47,9 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
           onClick={() => setActivePlatform("instagram")}
           aria-label="Instagram"
         >
-          <span aria-hidden="true"><FaInstagram /></span>
+          <span aria-hidden="true">
+            <FaInstagram />
+          </span>
         </button>
         <button
           className={styles.channelIcon}
@@ -34,7 +57,9 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
           onClick={() => setActivePlatform("twitter")}
           aria-label="Twitter"
         >
-          <span aria-hidden="true"><FaTwitter /></span>
+          <span aria-hidden="true">
+            <FaTwitter />
+          </span>
         </button>
         <button
           className={styles.channelIcon}
@@ -42,7 +67,9 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
           onClick={() => setActivePlatform("youtube")}
           aria-label="YouTube"
         >
-          <span aria-hidden="true"><FaYoutube /></span>
+          <span aria-hidden="true">
+            <FaYoutube />
+          </span>
         </button>
         <button
           className={styles.channelIcon}
@@ -50,7 +77,9 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
           onClick={() => setActivePlatform("linkedin")}
           aria-label="LinkedIn"
         >
-          <span aria-hidden="true"><FaLinkedinIn /></span>
+          <span aria-hidden="true">
+            <FaLinkedinIn />
+          </span>
         </button>
         <button
           className={styles.channelIcon}
@@ -58,7 +87,9 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
           onClick={() => setActivePlatform("pinterest")}
           aria-label="Pinterest"
         >
-          <span aria-hidden="true"><FaPinterestP /></span>
+          <span aria-hidden="true">
+            <FaPinterestP />
+          </span>
         </button>
         <button
           className={styles.channelIcon}
@@ -66,7 +97,9 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
           onClick={() => setActivePlatform("facebook")}
           aria-label="Facebook"
         >
-          <span aria-hidden="true"><FaFacebookF /></span>
+          <span aria-hidden="true">
+            <FaFacebookF />
+          </span>
         </button>
         <button
           className={styles.channelIcon}
@@ -74,7 +107,9 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
           onClick={() => setActivePlatform("threads")}
           aria-label="Threads"
         >
-          <span aria-hidden="true"><SiThreads /></span>
+          <span aria-hidden="true">
+            <SiThreads />
+          </span>
         </button>
       </div>
 
@@ -88,9 +123,25 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
         <button className={styles.help} aria-label="Help">
           ⭐️
         </button>
-        <button className={styles.profilePic} aria-label="Profile">
-          <span className={styles.profileInitial}>U</span>
-        </button>
+
+        {/* Profile Dropdown */}
+        <div className={styles.profileContainer}>
+          <button
+            className={styles.profilePic}
+            aria-label="Profile"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <span className={styles.profileInitial}>U</span>
+          </button>
+
+          {dropdownOpen && (
+            <div className={styles.profileDropdown}>
+              <button onClick={handleLogout} className={styles.logoutButton}>
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

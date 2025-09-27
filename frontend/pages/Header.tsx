@@ -47,7 +47,6 @@ export default function Header() {
 
         {/* Auth buttons */}
         <div className={styles.actions}>
-          <Link href="/connect" className={styles.HomeButton}>Home</Link>
           <Link href="/login" className={styles.loginButton}>Log In</Link>
           <Link href="/register" className={styles.getStartedButton}>Get Started</Link>
         </div>

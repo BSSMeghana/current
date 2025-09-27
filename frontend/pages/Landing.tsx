@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import LHeader from "./LHeader";
 import Sidebar from "./Sidebar";
 import styles from "../styles/Landing.module.css";
@@ -11,6 +12,7 @@ import Planning from "./Planning";
 import Analytics from "./Analytics";
 import Summary from "./Summary";
 import YouTubeConnect from "./YouTubeConnect";
+import YouTubePost from "./YouTubePost";
 import InstagramConnect from "./InstagramConnect";
 import FacebookConnect from "./FacebookConnect";
 import TwitterConnect from "./TwitterConnect";
@@ -18,17 +20,27 @@ import LinkedInConnect from "./LinkedInConnect";
 import PinterestConnect from "./PinterestConnect";
 import ThreadsConnect from "./ThreadsConnect";
 
-
-
 const Landing = () => {
+  const router = useRouter();
   const [activeSegment, setActiveSegment] = useState("Create");
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
+  const [youtubeConnected, setYoutubeConnected] = useState(false);
+
+  // Check URL query for YouTube connection
+  useEffect(() => {
+    if (router.query.youtube === "connected") {
+      setActivePlatform("youtube");
+      setYoutubeConnected(true);
+      // Optional: remove query param after reading
+      router.replace("/Landing", undefined, { shallow: true });
+    }
+  }, [router.query]);
 
   const renderContent = () => {
     if (activePlatform) {
       switch (activePlatform) {
         case "youtube":
-          return <YouTubeConnect />;
+          return youtubeConnected ? <YouTubePost /> : <YouTubeConnect />;
         case "instagram":
           return <InstagramConnect />;
         case "facebook":

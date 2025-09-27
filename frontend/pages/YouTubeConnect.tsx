@@ -1,40 +1,22 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 import styles from "../styles/YouTubeConnect.module.css";
 import { FaYoutube } from "react-icons/fa";
 
 const YouTubeConnect = () => {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleConnectYouTube = async () => {
+  const handleConnectYouTube = () => {
     setLoading(true);
-
     try {
-      const response = await fetch("/api/youtube/connect", {
-        method: "POST",
-        credentials: "include", // Important: sends session cookie
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        alert(errorData.message || "Failed to initiate connection. Please try again.");
-        setLoading(false);
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.authUrl) {
-        // Redirect user to Google OAuth consent screen
-        window.location.href = data.authUrl;
-      } else {
-        alert("Something went wrong. Please try again.");
-      }
+      // Redirect to backend OAuth route
+      // Add a redirect query param to return to Landing page with "youtube=connected"
+      const redirectUri = encodeURIComponent("http://localhost:3000/Landing?youtube=connected");
+      window.location.href = `http://localhost:4000/auth/youtube?redirect=${redirectUri}`;
     } catch (error) {
       console.error("Connection error:", error);
-      alert("Unable to connect to YouTube. Check your internet or try again later.");
-    } finally {
+      alert(
+        "Unable to connect to YouTube. Check your internet or try again later."
+      );
       setLoading(false);
     }
   };
@@ -90,7 +72,8 @@ const YouTubeConnect = () => {
 
         <div className={styles.footerNote}>
           <p>
-            By connecting, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+            By connecting, you agree to our <a href="#">Terms</a> and{" "}
+            <a href="#">Privacy Policy</a>.
           </p>
         </div>
       </div>
